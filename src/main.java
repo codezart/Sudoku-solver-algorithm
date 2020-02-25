@@ -1,17 +1,21 @@
-import java.util.ArrayList;
-
+/**
+ *  Developed by Mohammed Abdur Rahman
+ *  This is a Sudoku solving algorithm which uses the recursive backtracking approach to solving
+ *  this puzzle.
+ *
+ */
 public class main {
     public static int SUBSECTION_SIZE=3;
     public static int[][] playarea = {
-            {7,3,4,0,0,0,0,2,1},
-            {6,8,5,0,0,2,0,9,0},
-            {2,0,0,0,0,4,0,0,0},
-            {5,6,0,0,2,0,0,3,9},
-            {3,0,0,0,1,0,0,7,6},
-            {0,0,0,0,0,0,5,0,2},
-            {0,2,6,0,7,0,0,5,3},
-            {8,5,1,3,4,0,2,0,0},
-            {4,0,3,0,5,0,0,1,0}
+            {5,3,0,0,7,0,0,0,0},
+            {6,0,0,1,9,5,0,0,0},
+            {0,9,8,0,0,0,0,6,0},
+            {8,0,0,0,6,0,0,0,3},
+            {4,0,0,8,0,3,0,0,1},
+            {7,0,0,0,2,0,0,0,6},
+            {0,6,0,0,0,0,2,8,0},
+            {0,0,0,4,1,9,0,0,5},
+            {0,0,0,0,8,0,0,7,9}
     };
     public static void main(String[] args){
 
@@ -33,46 +37,37 @@ public class main {
          * Now if you reach num 9 by incrementing and if that also doesnt work, go back to the previous block where you set an input and
          * increment it by 1 and so on.
          */
+        System.out.println();
         solveSudoku();
         //CHECK IF THE RULES HOLD TRUE OR NOT.
+
+
+    }
+    public static void print(){
         for(int i = 0; i < playarea.length; ++i) {
-            for (int j = 0; j < playarea[0].length; ++j)
+            for (int j = 0; j < playarea[i].length; ++j)
                 System.out.print(playarea[i][j] + ", ");
             System.out.println();
         }
     }
-
     public static void solveSudoku(){
-    ArrayList<ArrayList<Integer>> indexes = new ArrayList<>();
-    int size = 0;
-        for (int i=0; i<playarea.length; ++i){
-            for (int j=0; j<playarea[i].length;++j){        // Loop every number,
+        for (int i = 0 ; i <playarea.length; ++i){
+            for(int j = 0; j < playarea[i].length; ++j){        // Loop every number,
                 if(playarea[i][j] == 0){                    //check if a number is 0 or not.
-                    indexes.add(new ArrayList<>());
-                    indexes.get(size).add(i);
-                    indexes.get(size).add(j);
-
-                    int k = 1;                         //if yes, start inserting numbers and checking the validity
-                    boolean isValid;
-                    do{
-                        playarea[i][j] = k;
-                        isValid = check();
-                        if(isValid)
-                            indexes.get(size).add(k);
-                        ++k;
-                    }while(k < 10 && !isValid);
-
-                    if (k == 10 && !isValid){
+                    for(int k = 1; k < 10; ++k){
+                       playarea[i][j] = k;
+                       if(check()){
+                           solveSudoku();
+                           //System.out.println();
+                           //print();
+                       }
                         playarea[i][j] = 0;
-                        i = indexes.get(size-2).get(0);
-                        j = indexes.get(size-2).get(1);
-                        indexes.remove(size-1);
-                        --size;
                     }
-                    ++size;
+                      return;
                 }
             }
         }
+        print();
     }
     private static boolean check(){
         /**
@@ -90,9 +85,8 @@ public class main {
             for (int j = 0; j<playarea[0].length; ++j){
                curnum = playarea[i][j];                             //assign current number
                checkRow = rowCheck(playarea[i], curnum);            //check row
-               checkColumn = columnCheck( curnum, j);      //check column
-               checkBox = subSectionCheck( curnum, i, j);  //check box validation
-                System.out.println("box: "+checkBox + " "+ checkRow+" "+ checkColumn +", currnum: "+curnum+" ("+i+", "+j+")");
+               checkColumn = columnCheck( curnum, j);               //check column
+               checkBox = subSectionCheck( curnum, i, j);           //check box validation
                 if (!checkRow)
                    return false;
                else if(!checkBox)
@@ -175,7 +169,7 @@ public class main {
         int columnStart = (y /SUBSECTION_SIZE)*SUBSECTION_SIZE;
         int columnEnd = columnStart+(SUBSECTION_SIZE);
 
-        int[][] subSection = new int[3][3]; //Since this sudoku solver is only solving a 9x9 grid sudoku game, we can hard code it for easiness
+        int[][] subSection = new int[3][3];                     //Since this sudoku solver is only solving a 9x9 grid sudoku game, we can hard code it for easiness
         int row= rowStart;
         int column;
 
