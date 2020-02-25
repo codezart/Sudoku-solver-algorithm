@@ -27,7 +27,7 @@ public class main {
         }
         /**
          * //Allow the program to run itself. using ******backtracking algorithm*******.
-         * Backtracking algorithm for sudoku
+         * 
          *
          * At a cell with value zero, the algorithm will first set it to 1 and check if it satisfies the rules of the game
          * if yes
